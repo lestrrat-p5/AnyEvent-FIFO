@@ -3,6 +3,8 @@ use strict;
 use AnyEvent;
 use AnyEvent::Util ();
 
+our $VERSION = '0.00001';
+
 sub new {
     my $class = shift;
     bless {
