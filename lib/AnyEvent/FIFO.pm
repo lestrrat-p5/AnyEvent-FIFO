@@ -24,7 +24,6 @@ sub push {
     }
 
     push @{$self->{events}->{$slot}}, [$cb, @args];
-    $self->{active}->{$slot} ||= 0;
 
     # XXX is it OK to rely on idle? Is there a possibility we might be
     # asked to wait for a very long time?
@@ -43,7 +42,7 @@ sub drain {
         $dispatched = 0;
         foreach my $slot (@slots) {
             my $events = $self->{events}->{$slot};
-            if ( @$events && $self->{active}->{$slot} < $self->{max_active} ) {
+            if ( @$events && ($self->{active}->{$slot} ||= 0) < $self->{max_active} ) {
                 $dispatched++;
                 my $stuff = shift @$events;
                 my ($cb, @args) = @$stuff;
