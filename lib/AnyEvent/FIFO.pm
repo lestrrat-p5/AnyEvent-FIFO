@@ -18,7 +18,6 @@ sub new {
 sub push {
     my ($self, $slot, $cb, @args) = @_;
     # the first argument must be the name of the slot or a callback
-    # if no callback is specified, then 
     if (ref $slot) {
         unshift @args, $cb;
         $cb = $slot;
@@ -27,10 +26,7 @@ sub push {
 
     push @{$self->{events}->{$slot}}, [$cb, @args];
 
-    # XXX is it OK to rely on idle? Is there a possibility we might be
-    # asked to wait for a very long time?
-    my $idle; $idle = AE::idle sub {
-        undef $idle;
+    AE::postpone sub {
         $self->drain();
     };
 }
@@ -54,8 +50,7 @@ sub drain {
                     if ($self->{active}->{$slot} <= 0) {
                         delete $self->{active}->{$slot};
                     }
-                    my $idle; $idle = AE::idle sub {
-                        undef $idle;
+                    AE::postpone sub {
                         $self->drain();
                     };
                 }, @args );
