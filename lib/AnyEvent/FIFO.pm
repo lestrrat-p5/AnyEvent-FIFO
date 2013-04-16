@@ -3,7 +3,7 @@ use strict;
 use AnyEvent;
 use AnyEvent::Util ();
 
-our $VERSION = '0.00001';
+our $VERSION = '0.00002';
 
 sub new {
     my $class = shift;
@@ -48,6 +48,7 @@ sub drain {
                 $dispatched++;
                 my $stuff = shift @$events;
                 my ($cb, @args) = @$stuff;
+                $self->{active}->{$slot}++;
                 $cb->( AnyEvent::Util::guard {
                     $self->{active}->{$slot}--;
                     if ($self->{active}->{$slot} <= 0) {

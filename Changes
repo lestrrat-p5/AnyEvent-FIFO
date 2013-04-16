@@ -1,5 +1,8 @@
 Changes
 =======
 
+0.00002 - 28 Apr 2010
+    * Fix a problem where the slot counter wasn't properly incremented (tkimuranet)
+
 0.00001 - 19 Feb 2010
     * Initial release
