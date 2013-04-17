@@ -31,6 +31,18 @@ sub push {
     };
 }
 
+sub active {
+    my ($self, $slot) = @_;
+    $slot = "__default__" unless(defined($slot));
+    return $self->{active}->{$slot} || 0;
+}
+
+sub waiting {
+    my ($self, $slot) = @_;
+    $slot = "__default__" unless(defined($slot));
+    return $self->{events}->{$slot} ? (0 + @{$self->{events}->{$slot}}) : 0;
+}
+
 sub drain {
     my $self = shift;
 
@@ -136,6 +148,30 @@ $guard is the actually trigger that kicks the next callback to be executed, so y
 =item @args
 
 List of extra arguments that gets passed to the callback
+
+=back
+
+=head2 active ([$slot])
+
+Returns number of active tasks for a given slot.
+
+=over 4
+
+=item $slot
+
+The name of the slot, "__default__" is used if not specified.
+
+=back
+
+=head2 waiting ([$slot])
+
+Returns number of waiting tasks for a given slot.
+
+=over 4
+
+=item $slot
+
+The name of the slot, "__default__" is used if not specified.
 
 =back
 

@@ -1,5 +1,5 @@
 use strict;
-use Test::More (tests => 21);
+use Test::More (tests => 41);
 use AnyEvent;
 
 use_ok "AnyEvent::FIFO";
@@ -15,6 +15,8 @@ foreach my $i (1..10) {
         my ($guard, @args) = @_;
         is( $args[0], $i, "arg is $i" );
         is( $i, $expected++, "$i-th execution" );
+	is( $q->active, 1, "1 task is running" );
+	is( $q->waiting, 10 - $i, "$i tasks is waiting" );
         $cv->end
     }, $i );
 }
