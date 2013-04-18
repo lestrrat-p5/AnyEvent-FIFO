@@ -1,0 +1,72 @@
+{
+   "abstract" : "Simple FIFO Callback Dispatch",
+   "author" : [
+      "This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehman."
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v0.0.53, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "AnyEvent-FIFO",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.36",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion" : "0.10108",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.0.3"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "AnyEvent" : "0"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/lestrrat/AnyEvent-FIFO/issues"
+      },
+      "homepage" : "https://github.com/lestrrat/AnyEvent-FIFO",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/lestrrat/AnyEvent-FIFO.git",
+         "web" : "https://github.com/lestrrat/AnyEvent-FIFO"
+      }
+   },
+   "version" : "0.00002",
+   "x_contributors" : [
+      "kolya <mar.kolya@gmail.com>",
+      "lestrrat <lestrrat+github@gmail.com>"
+   ]
+}

@@ -19,3 +19,10 @@ MANIFEST.bak
 cover_db
 .build*
 AnyEvent-FIFO-*
+/AnyEvent-FIFO-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
+extlib
