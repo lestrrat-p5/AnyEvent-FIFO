@@ -105,6 +105,16 @@ by yourself. It's handled automatically
 
 # AUTHOR
 
-This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehman.
+Daisuke Maki.
 
-(c) Daisuke Maki ` <<daisuke@endeworks.jp`\> > 2010
+This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehmann.
+
+# COPYRIGHT AND LICENSE 
+
+The ZMQ::LibZMQ2 module is
+
+Copyright (C) 2010 by Daisuke Maki
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.0 or,
+at your option, any later version of Perl 5 you may have available.

@@ -1,12 +1,12 @@
 {
    "abstract" : "Simple FIFO Callback Dispatch",
    "author" : [
-      "This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehman."
+      "Daisuke Maki."
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v0.0.53, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "unknown"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -67,6 +67,6 @@
    "version" : "0.00002",
    "x_contributors" : [
       "kolya <mar.kolya@gmail.com>",
-      "lestrrat <lestrrat+github@gmail.com>"
+      "Daisuke Maki <lestrrat+github@gmail.com>"
    ]
 }
