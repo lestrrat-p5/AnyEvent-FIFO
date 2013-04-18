@@ -3,22 +3,23 @@ use strict;
 use AnyEvent;
 use AnyEvent::Util ();
 
-our $VERSION = '0.00001';
+our $VERSION = '0.00002';
 
 sub new {
     my $class = shift;
-    bless {
+    my $self = {
         max_active => 1,
         @_,
         active => {},
         events => {},
-    }, $class;
+    };
+    $self->{cv} ||= AE::cv;
+    return bless($self, $class);
 }
 
 sub push {
     my ($self, $slot, $cb, @args) = @_;
     # the first argument must be the name of the slot or a callback
-    # if no callback is specified, then 
     if (ref $slot) {
         unshift @args, $cb;
         $cb = $slot;
@@ -26,13 +27,29 @@ sub push {
     }
 
     push @{$self->{events}->{$slot}}, [$cb, @args];
+    $self->{cv}->begin();
 
-    # XXX is it OK to rely on idle? Is there a possibility we might be
-    # asked to wait for a very long time?
-    my $idle; $idle = AE::idle sub {
-        undef $idle;
+    AE::postpone sub {
         $self->drain();
     };
+}
+
+sub active {
+    my ($self, $slot) = @_;
+    $slot = "__default__" unless(defined($slot));
+    return $self->{active}->{$slot} || 0;
+}
+
+sub waiting {
+    my ($self, $slot) = @_;
+    $slot = "__default__" unless(defined($slot));
+    return $self->{events}->{$slot} ? (0 + @{$self->{events}->{$slot}}) : 0;
+}
+
+sub cv {
+    my $self = shift;
+    $self->{cv} = $_[0] if(@_);
+    return $self->{cv};
 }
 
 sub drain {
@@ -48,13 +65,14 @@ sub drain {
                 $dispatched++;
                 my $stuff = shift @$events;
                 my ($cb, @args) = @$stuff;
+                $self->{active}->{$slot}++;
                 $cb->( AnyEvent::Util::guard {
                     $self->{active}->{$slot}--;
                     if ($self->{active}->{$slot} <= 0) {
                         delete $self->{active}->{$slot};
                     }
-                    my $idle; $idle = AE::idle sub {
-                        undef $idle;
+		    $self->{cv}->end();
+                    AE::postpone sub {
                         $self->drain();
                     };
                 }, @args );
@@ -84,6 +102,8 @@ AnyEvent::FIFO - Simple FIFO Callback Dispatch
     $fifo->push( "slot", \&callback, @args );
 
     # dispatch is done automatically
+    # wait for all tasks to complete
+    $fifo->cv->recv();
 
     sub callback {
         my ($guard, @args) = @_;
@@ -94,10 +114,10 @@ AnyEvent::FIFO - Simple FIFO Callback Dispatch
 
 =head1 DESCRIPTION
 
-AnyEvent::FIFO is a simple FIFO queue to dispatch events in order. 
+AnyEvent::FIFO is a simple FIFO queue to dispatch events in order.
 
 If you use regular watchers and register callbacks from various places in
-your program, you're not necessarily guaranteed that the callbacks will be 
+your program, you're not necessarily guaranteed that the callbacks will be
 executed in the order that you expect. By using this module, you can
 register callbacks and they will be executed in that particular order.
 
@@ -110,6 +130,12 @@ register callbacks and they will be executed in that particular order.
 =item max_active => $number
 
 Number of concurrent callbacks to be executed B<per slot>.
+
+=item cv => $cv
+
+Instance of L<AnyEvent condvar|AnyEvent/"CONDITION VARIABLES">. AnyEvent::FIFO will create one for you if this is not provided.
+
+AnyEvent::FIFO calls $cv->begin() when new task is pushed and $cv->end() when task is completed.
 
 =back
 
@@ -143,6 +169,42 @@ List of extra arguments that gets passed to the callback
 
 =back
 
+=head2 active ([$slot])
+
+Returns number of active tasks for a given slot.
+
+=over 4
+
+=item $slot
+
+The name of the slot, "__default__" is used if not specified.
+
+=back
+
+=head2 waiting ([$slot])
+
+Returns number of waiting tasks for a given slot.
+
+=over 4
+
+=item $slot
+
+The name of the slot, "__default__" is used if not specified.
+
+=back
+
+=head2 cv ([$cv])
+
+Gets or sets L<AnyEvent condvar|AnyEvent/"CONDITION VARIABLES">.
+
+=over 4
+
+=item $cv
+
+A new condvar to assign to this FIFO
+
+=back
+
 =head2 drain
 
 Attemps to drain the queue, if possible. You DO NOT need to call this method
@@ -150,7 +212,7 @@ by yourself. It's handled automatically
 
 =head1 AUTHOR
 
-This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehman. 
+This module is basically a generalisation of the FIFO queue used in AnyEvent::HTTP by Marc Lehman.
 
 (c) Daisuke Maki C< <<daisuke@endeworks.jp>> > 2010
 
