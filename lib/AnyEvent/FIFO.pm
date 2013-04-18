@@ -3,7 +3,7 @@ use strict;
 use AnyEvent;
 use AnyEvent::Util ();
 
-our $VERSION = '0.00002';
+our $VERSION = '0.00003';
 
 sub new {
     my $class = shift;

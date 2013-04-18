@@ -64,7 +64,7 @@
          "web" : "https://github.com/lestrrat/AnyEvent-FIFO"
       }
    },
-   "version" : "0.00002",
+   "version" : "0.00003",
    "x_contributors" : [
       "kolya <mar.kolya@gmail.com>",
       "Daisuke Maki <lestrrat+github@gmail.com>"
